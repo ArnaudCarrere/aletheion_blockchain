@@ -3,7 +3,7 @@
  */
 rule EverybodyCanReadEverything {
     description: "Allow all participants read access to all resources"
-    participant: "org.acme.sample.User"
+    participant: "org.acme.sample.Company"
     operation: READ
     resource: "org.acme.sample.*"
     action: ALLOW
@@ -11,9 +11,17 @@ rule EverybodyCanReadEverything {
 
 rule EverybodyCanSubmitTransactions {
     description: "Allow all participants to submit transactions"
-    participant: "org.acme.sample.User"
+    participant: "org.acme.sample.Company"
     operation: CREATE
-    resource: "org.acme.sample.User"
+    resource: "org.acme.sample.*"
+    action: ALLOW
+}
+
+rule CompaniesCanUpdateAccounts {
+    description: "Allow companies to update accounts"
+    participant: "org.acme.sample.Company"
+    operation: UPDATE
+    resource: "org.acme.sample.*"
     action: ALLOW
 }
 
@@ -23,4 +31,20 @@ rule SystemACL {
   operation: ALL
   resource: "org.hyperledger.composer.system.**"
   action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
 }

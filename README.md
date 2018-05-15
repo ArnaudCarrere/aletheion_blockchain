@@ -1,76 +1,78 @@
-# News Clip Business Network
-Trusted News Network (TNN) - A sample hyperledger composer business network definition (BND)
+# Accounts Certification Network
+A blockchain POC on Hyperledger Composer 
 
-> This is a news clip Hyperledger Composer sample, which demonstrates the core functionality of Hyperledger Composer by changing the values of the points for producer of clips after a watched transaction and well as changing the value of reputation for consumer that are watching the produced video news clips.
+> This is a Hyperledger Composer POC, which demonstrates the core functionalities of our solution by changing the status of the accounts after a decision taken by the corresponding company.
 
-**This business network defines:**
-- A network of decentralized users (Participants) that participates in the network by either producing or consuming video/news clips (Assets).
-- Producers earns rewards/points every time the clips they have produced and uploaded into the network are consumed (emitting a watched transaction).
-- Consumers earns reputation points every time they watched a published news clip.
+**This network defines:**
+- A network of decentralized companies (participants) that participates in the network by managing their bank accounts.
+- An account is added to the blockchain by a bank as Awaiting during a transfer.
+- An account can be Rejected or Certified through the mobile app by the associated company.
 
 **Participant**
-`User`
+`Company`
 
 **Asset**
-`NewsClip`
+`Account`
 
 **Transaction**
-`WatchedTransaction`
-`PublishedTransaction`
+`CertifiedTransaction`
+`RejectedTransaction`
 
 **Event**
-`WatchedEvent`
+`CertifiedEvent`
+`RejectedEvent`
 `ErrorEvent`
 
-NewsClip are produced by a Users (producers) and watched by Users (consumers) and the value property on a NewsClip can be modified by submitting either a PublishedTransaction or WatchedTransaction. The PublishedTransaction must be submitted by the producer prior to submitting a WatchedTransaction by any User in the network which will subsequently emits a WatchedEvent.
+Accounts are added to the blockchain by banks and processed by companies as Certified or Rejected by submitting either a CertifiedTransaction or RejectedTransaction. These transactions and events must be submitted by the company corresponding to the account. Once the account is processed, the bank receives the result to finish the transfer.
 
 To test this Business Network Definition in the **Test** tab:
 
-Create a `User` participant:
+Create a `Company` participant:
 
 ```
 {
-  "$class": "org.acme.sample.User",
-  "userId": "USER1",
-  "firstName": "Tobias",
-  "lastName": "Hunter",
-  "points":"0",
-  "reputation":"0",
+  "$class": "org.acme.sample.Company",
+  "companyId": "peugeotId",
+  "companyName": "Automobiles Peugeot",
+  "address": "7 RUE HENRI STE CLAIRE DEVILLE 92563 RUEIL-MALMAISON",
+  "touch":"To configure",
+  "siret": 55214450301248
 }
 ```
 
-Create a `NewsClip` asset:
+Create a `Account` asset:
 
 ```
 {
-  "$class": "org.acme.sample.NewsClip",
-  "clipId": "CLIP1",
-  "producer": "resource:org.acme.sample.User#USER1",
-  "title": "POTUS",
-  "topic": "politics",
-  "tags": "potus, politics",
-  "length": "120"
+  "$class": "org.acme.sample.Account",
+  "accountId": "1",
+  "company": "resource:org.acme.sample.Company#peugeotId",
+  "accountName": "PEUGEOT IVRY",
+  "iban": "FR7630004015870002601171220",
+  "status": "Awaiting"
 }
 ```
 
-Submit a `PublishedTransaction` transaction:
+Submit a `CertifiedTransaction` transaction:
 
 ```
 {
-  "$class": "org.acme.sample.WatchedTransaction",
-  "newsClip": "resource:org.acme.sample.NewsClip#CLIP1",
-  "producer": "resource:org.acme.sample.User#USER1"
+  "$class": "org.acme.sample.CertifiedTransaction",
+  "account": "resource:org.acme.sample.Account#1",
+  "company": "resource:org.acme.sample.Company#peugeotId"
 }
 ```
 
-Submit a `WatchedTransaction` transaction:
+After submitting this transaction, you should now see the transaction in the Transaction Registry and that a `CertifiedEvent` has been emitted.
+
+Submit a `RejectedTransaction` transaction:
 
 ```
 {
-  "$class": "org.acme.sample.WatchedTransaction",
-  "newsClip": "resource:org.acme.sample.NewsClip#CLIP1",
-  "consumer": "resource:org.acme.sample.User#USER1"
+  "$class": "org.acme.sample.RejectedTransaction",
+  "account": "resource:org.acme.sample.Account#1",
+  "company": "resource:org.acme.sample.Company#peugeotId"
 }
 ```
 
-After submitting this transaction, you should now see the transaction in the Transaction Registry and that a `WatchedEvent` has been emitted.
+After submitting this transaction, you should now see the transaction in the Transaction Registry and that a `RejectedEvent` has been emitted.

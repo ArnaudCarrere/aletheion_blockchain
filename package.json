@@ -2,13 +2,13 @@
   "engines": {
     "composer": "^0.11.0"
   },
-  "name": "news-network",
+  "name": "accounts-network",
   "version": "1.1.0",
-  "description": "The decentralized news network",
+  "description": "The decentralized accounts network",
   "networkImage": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimage.svg",
   "networkImageanimated": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimageanimated.svg",
   "scripts": {
-    "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/news-network.bna",
+    "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/accounts-network.bna",
     "pretest": "npm run lint",
     "lint": "eslint .",
     "postlint": "npm run licchk",
